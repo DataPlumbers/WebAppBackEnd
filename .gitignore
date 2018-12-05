@@ -1,4 +1,5 @@
 .idea/
 /python-flask/.idea/
 /python-flask/venv/
-**/venv
+venv/
+
