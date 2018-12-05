@@ -34,7 +34,7 @@ def static_proxy(path):
     return send_from_directory(dir_name, file_name)
 
 
-@app.route('/user', methods=['GET'])
+@app.route('/users', methods=['GET'])
 @jwt_required
 def user():
     ''' route read user '''
@@ -44,7 +44,7 @@ def user():
         return jsonify({'ok': True, 'data': data}), 200
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/users/signup', methods=['POST'])
 def register():
     ''' register user endpoint '''
     data = validate.validate_user(request.get_json())
@@ -58,7 +58,7 @@ def register():
         return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
 
-@app.route('/auth', methods=['POST'])
+@app.route('/users/auth', methods=['POST'])
 def auth_user():
     ''' auth endpoint '''
     data = validate.validate_user(request.get_json())
