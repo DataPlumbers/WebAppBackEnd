@@ -52,7 +52,7 @@ def register():
         data = data['data']
         data['password'] = flask_bcrypt.generate_password_hash(
             data['password'])
-        mongo.db.data.insert_one(data)
+        mongo.db.users.insert_one(data)
         return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
     else:
         return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
