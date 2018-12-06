@@ -1,0 +1,119 @@
+{
+	"info": {
+		"_postman_id": "d507a8ea-5869-4145-906b-c97d2c1ffcc4",
+		"name": "Flask Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Flask Mongo user JWT register test - Post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"test123@email.com\",\n\t\"name\": \"Bobby Burns\",\n\t\"password\": \"password\"\n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:4000/users/signup",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flask Mongo user JWT auth test",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"test123@email.com\",\n\t\"password\": \"password\"\n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:4000/users/auth",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flask Mongo user JWT fetch user test",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NDQwNTQzMzUsIm5iZiI6MTU0NDA1NDMzNSwianRpIjoiYzZhY2Q3ZDgtOWZlYi00NzRkLTkyMzktMGRlMDkyN2RkNjRkIiwiZXhwIjoxNTc1NTkwMzM1LCJpZGVudGl0eSI6eyJlbWFpbCI6InRlc3QxMjNAZW1haWwuY29tIiwicGFzc3dvcmQiOiJwYXNzd29yZCJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.kce1f6huJIm2hbItbab3WIj9pjwS3ySiy01KQZNYZTQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://0.0.0.0:4000/users?email=test123@email.com",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "4000",
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "test123@email.com"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
