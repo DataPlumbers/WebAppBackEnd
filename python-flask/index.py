@@ -1,7 +1,5 @@
 """ index file for REST APIs using Flask """
 import os
-import sys
-import requests
 import modules.schemas.user as validate
 from flask import jsonify, request, make_response, send_from_directory
 from flask_jwt_extended import (create_access_token, create_refresh_token,
