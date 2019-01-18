@@ -8,7 +8,7 @@ from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from bson.objectid import ObjectId
-
+from flask_cors import CORS
 
 class JSONEncoder(json.JSONEncoder):
     ''' extend json-encoder class'''
@@ -25,6 +25,7 @@ class JSONEncoder(json.JSONEncoder):
 
 # create the flask object
 app = Flask(__name__)
+CORS(app)
 
 # add mongo url to flask config, so that flask_pymongo can use it to make connection
 app.config['MONGO_DBNAME'] = 'test'
