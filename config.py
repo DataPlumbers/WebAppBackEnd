@@ -1,3 +1,3 @@
 from os import environ
 
-bind = environ.get('PORT', '8000')
+bind = '0.0.0.0:' + environ.get('PORT', '8000')
