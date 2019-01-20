@@ -13,6 +13,8 @@ os.environ.update({'ROOT_PATH': ROOT_PATH})
 # Port variable to run the server on.
 PORT = os.environ.get('PORT')
 
+sys.path.remove(lib_path)
+
 
 @app.errorhandler(404)
 def not_found(error):
