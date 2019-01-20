@@ -29,7 +29,8 @@ CORS(app)
 
 # add mongo url to flask config, so that flask_pymongo can use it to make connection
 app.config['MONGO_DBNAME'] = 'test'
-app.config['MONGO_URI'] = 'mongodb://127.0.0.1:27017/test'
+# app.config['MONGO_URI'] = 'mongodb://127.0.0.1:27017/test'
+app.config['MONGO_URI'] = 'mongodb://admin:c4pston3@ds161764.mlab.com:61764/dataplumers'
 app.config['JWT_SECRET_KEY'] = 'key.txt'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=365)
 

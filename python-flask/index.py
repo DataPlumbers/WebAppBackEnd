@@ -47,11 +47,16 @@ def register():
     ''' register user endpoint '''
     data = validate.validate_user(request.get_json())
     if data['ok']:
-        data = data['data']
-        data['password'] = flask_bcrypt.generate_password_hash(
-            data['password'])
-        mongo.db.users.insert_one(data)
-        return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
+        user = data['data']
+        user['password'] = flask_bcrypt.generate_password_hash(
+            user['password'])
+
+        user_exists = mongo.db.users.find_one({'email': user['email']}) != None
+        if(user_exists):
+            return jsonify({'ok': 'False', 'message': 'Email already exists!'}), 401
+        else:
+            mongo.db.users.insert_one(user)
+            return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
     else:
         return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
@@ -63,6 +68,7 @@ def auth_user():
     if data['ok']:
         data = data['data']
         user = mongo.db.users.find_one({'email': data['email']}, {"_id": 0})
+
         if user and flask_bcrypt.check_password_hash(user['password'], data['password']):
             del user['password']
             access_token = create_access_token(identity=data)
