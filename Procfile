@@ -1,1 +1,1 @@
-web: gunicorn wsgi:app
+web: gunicorn -c config.py wsgi:app
