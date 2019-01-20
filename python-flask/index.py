@@ -104,5 +104,5 @@ def unauthorized_response(callback):
 if __name__ == '__main__':
     app.config['DEBUG'] = os.environ.get('ENV') == 'development'  # Debug mode if development env
     port = int(os.environ.get('PORT', 33507))
-    host 
-    app.run(host='0.0.0.0', port=port)  # Run the app
+    host = os.environ.get('HOST', '0.0.0.0')
+    app.run(host=host, port=port)  # Run the app
