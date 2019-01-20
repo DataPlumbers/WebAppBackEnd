@@ -1,5 +1,7 @@
 """ index file for REST APIs using Flask """
-import os
+import os, sys
+lib_path = os.path.abspath(os.path.join('python-flask'))
+sys.path.append(lib_path)
 import modules.schemas.user as validate
 from flask import jsonify, request, make_response, send_from_directory
 from flask_jwt_extended import (create_access_token, create_refresh_token,
