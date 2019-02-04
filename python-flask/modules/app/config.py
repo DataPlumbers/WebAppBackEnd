@@ -10,6 +10,8 @@ from flask_bcrypt import Bcrypt
 from bson.objectid import ObjectId
 from flask_cors import CORS
 
+UPLOAD_FOLDER = '/uploads'
+
 class JSONEncoder(json.JSONEncoder):
     ''' extend json-encoder class'''
 
@@ -25,6 +27,7 @@ class JSONEncoder(json.JSONEncoder):
 
 # create the flask object
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 CORS(app)
 
 # add mongo url to flask config, so that flask_pymongo can use it to make connection
