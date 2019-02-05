@@ -5,9 +5,7 @@ Make sure you are in the root directory, WebAppBackEnd/
 
 Run the following commands.  
 
-Linux/Windows
-### `pip install pipenv`
-OSX
+Linux/Windows/OSX
 ### `pip3 install pipenv`
 Then run
 ### `pipenv install`
