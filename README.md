@@ -1,5 +1,5 @@
 ## Python-Flask Backend: How To Run
-[![Build Status](https://travis-ci.com/kramsey458/WebAppBackEnd.svg?branch=vertical-prototype)](https://travis-ci.com/kramsey458/WebAppBackEnd)
+[![Build Status](https://travis-ci.com/kramsey458/WebAppBackEnd.svg?branch=DAT-37)](https://travis-ci.com/kramsey458/WebAppBackEnd)
 
 Make sure you are in the root directory, WebAppBackEnd/  
 
