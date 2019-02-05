@@ -1,10 +1,5 @@
-""" index file for REST APIs using Flask """
 import os, sys, csv, json
 import pandas as pd
-
-lib_path = os.path.abspath(os.path.join('python-flask'))
-sys.path.append(lib_path)
-from flask import Flask
 import modules.schemas.user as validate
 from flask import jsonify, request, make_response, send_from_directory, redirect, url_for
 from flask_jwt_extended import (create_access_token, create_refresh_token,
@@ -13,11 +8,12 @@ from modules.app.config import app, mongo, flask_bcrypt, jwt
 from modules.utils.allowedFilenames import allowed_file
 from werkzeug.utils import secure_filename
 
+lib_path = os.path.abspath(os.path.join('python-flask'))
+sys.path.append(lib_path)
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 os.environ.update({'ROOT_PATH': ROOT_PATH})
 # Port variable to run the server on.
 PORT = os.environ.get('PORT')
-
 sys.path.remove(lib_path)
 
 
@@ -77,7 +73,6 @@ def auth_user():
     if data['ok']:
         data = data['data']
         user = mongo.db.users.find_one({'email': data['email']}, {"_id": 0})
-
         if user and flask_bcrypt.check_password_hash(user['password'], data['password']):
             del user['password']
             access_token = create_access_token(identity=data)
@@ -110,7 +105,6 @@ def unauthorized_response(callback):
     }), 401
 
 
-
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -121,27 +115,23 @@ def upload_file():
         # if user does not select file, browser also
         # submit a empty part without filename
         if file.filename == '':
-            return redirect(request.url)
+            return jsonify({'ok': False}), 404
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            df = pd.read_csv((os.path.join(app.config['UPLOAD_FOLDER'], filename)), encoding='ISO-8859-1')  # loading csv file
+            df = pd.read_csv((os.path.join(app.config['UPLOAD_FOLDER'], filename)),
+                             encoding='ISO-8859-1')  # loading csv file
             df.to_json((os.path.join(app.config['UPLOAD_FOLDER'], filename + '.json')))  # saving to json file
             jdf = open((os.path.join(app.config['UPLOAD_FOLDER'], filename + '.json'))).read()  # loading the json file
             mongo.db.datasets.insert_one(jdf)
             # data = json.loads(jdf)  # reading json file
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
-    return ''
-
-
-def create_app():
-    the_app = Flask(__name__)
-    return the_app
+            # return redirect(url_for('uploaded_file',filename=filename))
+            return jsonify({'ok': True}), 200
+    return jsonify({'ok': False}), 404
 
 
 if __name__ == '__main__':
-    app.config['DEBUG'] = os.environ.get('ENV') == 'development'  # Debug mode if development env
+    app.config['DEBUG'] # = os.environ.get('ENV') == 'development'  # Debug mode if development env
     port = int(os.environ.get('PORT', 33507))
     host = os.environ.get('HOST', '0.0.0.0')
     app.run(host=host, port=port)  # Run the app
