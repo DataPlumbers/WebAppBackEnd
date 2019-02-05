@@ -1,4 +1,4 @@
-import os, sys, csv, json
+import os, sys, csv, json, logging
 import pandas as pd
 import modules.schemas.user as validate
 from flask import jsonify, request, make_response, send_from_directory, redirect, url_for
@@ -131,7 +131,8 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    app.config['DEBUG'] # = os.environ.get('ENV') == 'development'  # Debug mode if development env
+    app.config['DEBUG'] = os.environ.get('ENV') == 'development'  # Debug mode if development env
     port = int(os.environ.get('PORT', 33507))
     host = os.environ.get('HOST', '0.0.0.0')
+    logging.basicConfig(filename='error.log', level=logging.DEBUG)
     app.run(host=host, port=port)  # Run the app
