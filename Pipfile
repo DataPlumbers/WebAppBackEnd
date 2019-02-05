@@ -44,6 +44,7 @@ Werkzeug = "==0.14.1"
 flask-cors = "*"
 gunicorn = "*"
 pandas = "*"
+pytest-flask = "*"
 
 [requires]
 python_version = "3.7"

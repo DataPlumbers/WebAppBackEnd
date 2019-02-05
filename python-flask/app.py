@@ -4,14 +4,14 @@ import pandas as pd
 
 lib_path = os.path.abspath(os.path.join('python-flask'))
 sys.path.append(lib_path)
+from flask import Flask
 import modules.schemas.user as validate
 from flask import jsonify, request, make_response, send_from_directory, redirect, url_for
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity)
 from modules.app.config import app, mongo, flask_bcrypt, jwt
+from modules.utils.allowedFilenames import allowed_file
 from werkzeug.utils import secure_filename
-
-ALLOWED_EXTENSIONS = set(['csv'])
 
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 os.environ.update({'ROOT_PATH': ROOT_PATH})
@@ -110,10 +110,6 @@ def unauthorized_response(callback):
     }), 401
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -137,6 +133,11 @@ def upload_file():
             return redirect(url_for('uploaded_file',
                                     filename=filename))
     return ''
+
+
+def create_app():
+    the_app = Flask(__name__)
+    return the_app
 
 
 if __name__ == '__main__':
