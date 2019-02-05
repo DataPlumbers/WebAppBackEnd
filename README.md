@@ -9,11 +9,14 @@ Linux/Windows
 ### `pip install pipenv`
 OSX
 ### `pip3 install pipenv`
-
+Then run
+### `pipenv install`
+### `pipenv shell`
+Change into the directory python-flask
 run using: `gunicorn app:app`
+OR `python3 app.py`
 
-using pipenv to install dependencies.<br>
 Open [http://0.0.0.0:8000/](http://0.0.0.0:8000/) to view it in the browser. 
 
 Flask_postman_tests.json contains GET and POST requests (Postman) to test the server with  
-View routes in index.py
+View routes in python-flask/app.py
