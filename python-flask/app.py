@@ -105,7 +105,7 @@ def unauthorized_response(callback):
     }), 401
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['POST'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
