@@ -115,12 +115,12 @@ def upload_file():
                 file = files[f]
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 df = pd.read_csv((os.path.join(app.config['UPLOAD_FOLDER'], filename)),
-                             encoding='ISO-8859-1')  # loading csv file
+                                 encoding='ISO-8859-1')  # loading csv file
                 records_ = df.to_dict(orient='records')
-                mongo.db.datasets.insert(records_, check_keys=False)
+                mongo.db.datasets.insert(records_)
         return jsonify({'ok': True}), 200
     else:
-        return jsonify({'ok': False}), 200
+        return jsonify({'ok': False}), 404
 
 
 if __name__ == '__main__':
