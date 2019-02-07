@@ -8,7 +8,7 @@ from flask_bcrypt import Bcrypt
 from bson.objectid import ObjectId
 from flask_cors import CORS
 
-UPLOAD_FOLDER = '/uploads'
+UPLOAD_FOLDER = 'uploads'
 
 
 class JSONEncoder(json.JSONEncoder):
