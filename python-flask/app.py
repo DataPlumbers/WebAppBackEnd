@@ -118,6 +118,8 @@ def upload_file():
                                  encoding='ISO-8859-1')  # loading csv file
                 records_ = df.to_dict(orient='records')
                 mongo.db.datasets.insert(records_)
+            else:
+                return jsonify({'ok': False}), 404
         return jsonify({'ok': True}), 200
     else:
         return jsonify({'ok': False}), 404
