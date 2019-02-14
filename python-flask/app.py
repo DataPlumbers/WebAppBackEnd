@@ -108,30 +108,25 @@ def unauthorized_response(callback):
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            return jsonify({'ok': False}), 404
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            df = pd.read_csv((os.path.join(app.config['UPLOAD_FOLDER'], filename)),
-                             encoding='ISO-8859-1')  # loading csv file
-            df.to_json((os.path.join(app.config['UPLOAD_FOLDER'], filename + '.json')))  # saving to json file
-            jdf = open((os.path.join(app.config['UPLOAD_FOLDER'], filename + '.json'))).read()  # loading the json file
-            mongo.db.datasets.insert_one(jdf)
-            # data = json.loads(jdf)  # reading json file
-            # return redirect(url_for('uploaded_file',filename=filename))
-            return jsonify({'ok': True}), 200
-    return jsonify({'ok': False}), 404
+        files = request.files.to_dict()
+        for f in files:
+            if allowed_file(files[f].filename):
+                filename = secure_filename(files[f].filename)
+                file = files[f]
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                df = pd.read_csv((os.path.join(app.config['UPLOAD_FOLDER'], filename)),
+                                 encoding='ISO-8859-1')  # loading csv file
+                records_ = df.to_dict(orient='records')
+                mongo.db.datasets.insert(records_)
+            else:
+                return jsonify({'ok': False}), 404
+        return jsonify({'ok': True}), 200
+    else:
+        return jsonify({'ok': False}), 404
 
 
 if __name__ == '__main__':
-    app.config['DEBUG'] = os.environ.get('ENV') == 'development'  # Debug mode if development env
+    # app.config['DEBUG'] = os.environ.get('ENV') == 'development'  # Debug mode if development env
     port = int(os.environ.get('PORT', 33507))
     host = os.environ.get('HOST', '0.0.0.0')
     logging.basicConfig(filename='error.log', level=logging.DEBUG)
