@@ -1,18 +1,20 @@
-""" index file for REST APIs using Flask """
-import os, sys
-lib_path = os.path.abspath(os.path.join('python-flask'))
-sys.path.append(lib_path)
+import os, sys, csv, json, logging
+import pandas as pd
 import modules.schemas.user as validate
-from flask import jsonify, request, make_response, send_from_directory
+from flask import jsonify, request, make_response, send_from_directory, redirect, url_for
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity)
-from modules.app.app import app, mongo, flask_bcrypt, jwt
+from modules.app.config import app, mongo, flask_bcrypt, jwt
+from modules.utils.allowed_filenames import allowed_file
+from modules.utils.init_classifier import classify_data
+from werkzeug.utils import secure_filename
 
+lib_path = os.path.abspath(os.path.join('python-flask'))
+sys.path.append(lib_path)
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 os.environ.update({'ROOT_PATH': ROOT_PATH})
 # Port variable to run the server on.
 PORT = os.environ.get('PORT')
-
 sys.path.remove(lib_path)
 
 
@@ -54,9 +56,8 @@ def register():
         user = data['data']
         user['password'] = flask_bcrypt.generate_password_hash(
             user['password'])
-
         user_exists = mongo.db.users.find_one({'email': user['email']}) != None
-        if(user_exists):
+        if (user_exists):
             return jsonify({'ok': 'False', 'message': 'Email already exists!'}), 401
         else:
             mongo.db.users.insert_one(user)
@@ -72,7 +73,6 @@ def auth_user():
     if data['ok']:
         data = data['data']
         user = mongo.db.users.find_one({'email': data['email']}, {"_id": 0})
-
         if user and flask_bcrypt.check_password_hash(user['password'], data['password']):
             del user['password']
             access_token = create_access_token(identity=data)
@@ -105,8 +105,56 @@ def unauthorized_response(callback):
     }), 401
 
 
+@app.route('/oldupload', methods=['POST'])
+def upload_file():
+    if request.method == 'POST':
+        # files = request.files.to_dict()
+        files = request.files.getlist('file')
+        for file in files:
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                df = pd.read_csv((os.path.join(app.config['UPLOAD_FOLDER'], filename)),
+                                 encoding='ISO-8859-1')  # loading csv file
+                records_ = df.to_dict(orient='records')
+                mongo.db.datasets.insert(records_)
+            else:
+                return jsonify({'ok': False}), 404
+        # category = request.form['category']
+        # properties = request.form['properties']
+        return jsonify({'ok': True}), 200
+    else:
+        return jsonify({'ok': False}), 404
+
+
+@app.route('/upload', methods=['POST'])
+def classify_file():
+    if request.method == 'POST':
+        # files = request.files.to_dict()
+        files = request.files.getlist('file')
+        category = request.form.get('category')
+        properties = request.form.get('properties')
+        filenames = []
+        for file in files:
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file_path = (os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                filenames.append(file_path)
+                # df = pd.read_csv(file_path, encoding='ISO-8859-1')  # loading csv file
+                # records_ = df.to_dict(orient='records')
+                # mongo.db.datasets.insert(records_)
+            else:
+                return jsonify({'ok': False}), 404
+        classify_data(category, properties, filenames)
+        return jsonify({'ok': True}), 200
+    else:
+        return jsonify({'ok': False}), 404
+
+
 if __name__ == '__main__':
-    app.config['DEBUG'] = os.environ.get('ENV') == 'development'  # Debug mode if development env
+    # app.config['DEBUG'] = os.environ.get('ENV') == 'development'  # Debug mode if development env
     port = int(os.environ.get('PORT', 33507))
     host = os.environ.get('HOST', '0.0.0.0')
+    logging.basicConfig(filename='error.log', level=logging.DEBUG)
     app.run(host=host, port=port)  # Run the app

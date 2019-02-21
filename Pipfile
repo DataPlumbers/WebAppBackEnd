@@ -43,6 +43,10 @@ PyJWT = "==1.7.0"
 Werkzeug = "==0.14.1"
 flask-cors = "*"
 gunicorn = "*"
+pandas = "*"
+pytest-flask = "*"
+jellyfish = "*"
+jsonmerge = "*"
 
 [requires]
 python_version = "3.7"
