@@ -9,7 +9,7 @@ Linux/Windows
 ### `pip install pipenv`
 OSX
 ### `pip3 install pipenv`
-
+change into the python-flask/ directory   
 run using: `gunicorn app:app`
 
 using pipenv to install dependencies.<br>
