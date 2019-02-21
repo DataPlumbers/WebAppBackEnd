@@ -5,7 +5,8 @@ from flask import jsonify, request, make_response, send_from_directory, redirect
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity)
 from modules.app.config import app, mongo, flask_bcrypt, jwt
-from modules.utils.allowedFilenames import allowed_file
+from modules.utils.allowed_filenames import allowed_file
+from modules.utils.init_classifier import classify_data
 from werkzeug.utils import secure_filename
 
 lib_path = os.path.abspath(os.path.join('python-flask'))
@@ -55,7 +56,6 @@ def register():
         user = data['data']
         user['password'] = flask_bcrypt.generate_password_hash(
             user['password'])
-
         user_exists = mongo.db.users.find_one({'email': user['email']}) != None
         if (user_exists):
             return jsonify({'ok': 'False', 'message': 'Email already exists!'}), 401
@@ -105,14 +105,14 @@ def unauthorized_response(callback):
     }), 401
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/oldupload', methods=['POST'])
 def upload_file():
     if request.method == 'POST':
-        files = request.files.to_dict()
-        for f in files:
-            if allowed_file(files[f].filename):
-                filename = secure_filename(files[f].filename)
-                file = files[f]
+        # files = request.files.to_dict()
+        files = request.files.getlist('file')
+        for file in files:
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 df = pd.read_csv((os.path.join(app.config['UPLOAD_FOLDER'], filename)),
                                  encoding='ISO-8859-1')  # loading csv file
@@ -120,6 +120,33 @@ def upload_file():
                 mongo.db.datasets.insert(records_)
             else:
                 return jsonify({'ok': False}), 404
+        # category = request.form['category']
+        # properties = request.form['properties']
+        return jsonify({'ok': True}), 200
+    else:
+        return jsonify({'ok': False}), 404
+
+
+@app.route('/upload', methods=['POST'])
+def classify_file():
+    if request.method == 'POST':
+        # files = request.files.to_dict()
+        files = request.files.getlist('file')
+        category = request.form.get('category')
+        properties = request.form.get('properties')
+        filenames = []
+        for file in files:
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file_path = (os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                filenames.append(file_path)
+                # df = pd.read_csv(file_path, encoding='ISO-8859-1')  # loading csv file
+                # records_ = df.to_dict(orient='records')
+                # mongo.db.datasets.insert(records_)
+            else:
+                return jsonify({'ok': False}), 404
+        classify_data(category, properties, filenames)
         return jsonify({'ok': True}), 200
     else:
         return jsonify({'ok': False}), 404

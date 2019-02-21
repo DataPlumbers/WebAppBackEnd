@@ -45,6 +45,8 @@ flask-cors = "*"
 gunicorn = "*"
 pandas = "*"
 pytest-flask = "*"
+jellyfish = "*"
+jsonmerge = "*"
 
 [requires]
 python_version = "3.7"
