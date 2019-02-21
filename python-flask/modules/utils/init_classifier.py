@@ -1,4 +1,4 @@
-from modules.DataTraining import app as classfier
+from modules.DataTraining import driver as classfier
 from jsonmerge import merge
 
 

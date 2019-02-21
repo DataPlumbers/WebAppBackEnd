@@ -132,8 +132,8 @@ def classify_file():
     if request.method == 'POST':
         # files = request.files.to_dict()
         files = request.files.getlist('file')
-        category = request.form.get('category')
-        properties = request.form.get('properties')
+        category = jsonify(request.form.get('category'))
+        properties = jsonify(request.form.get('properties'))
         filenames = []
         for file in files:
             if allowed_file(file.filename):
