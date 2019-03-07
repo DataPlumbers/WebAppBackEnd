@@ -98,15 +98,18 @@ def unauthorized_response(callback):
     }), 401
 
 
-@app.route('/get', methods=['GET'])
+@app.route('/category/get', methods=['GET'])
 def get_category():
-    category = (request.form.get('category'))
-    data = (json_util.dumps(category))
-    result = mongo.db.categories.find_one({'category_name': data})
-    return jsonify({'ok': True, 'categories': result})
+    if request.method == 'GET':
+        data = request.values.get('category_name')
+        result = mongo.db.categories.find_one({'category_name': data})
+        return jsonify({'ok': True, 'categories': ([
+        {'label': 'Review', 'value': ['author', 'comment', 'date']},
+        {'label': 'Employee', 'value': ['fullname', 'occupation', 'address', 'id']}
+     ])})
 
 
-@app.route('/remove', methods=['POST'])
+@app.route('/category/remove', methods=['POST'])
 def remove_category():
     data = request.get_json()
     category = data['category_name']
@@ -121,8 +124,8 @@ def remove_category():
 def classify_file():
     if request.method == 'POST':
         files = request.files.getlist('file')
-        category = (request.form.get('category'))
-        properties = (request.form.get('properties'))
+        category = (request.values.get('category'))
+        properties = (request.values.get('properties'))
         filenames = []
         for file in files:
             if allowed_file(file.filename):
