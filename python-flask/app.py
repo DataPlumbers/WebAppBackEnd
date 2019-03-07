@@ -4,18 +4,11 @@ import modules.schemas.user as validate
 from flask import jsonify, request, make_response, send_from_directory, redirect, url_for
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity)
-from modules.app.config import app, mongo, flask_bcrypt, jwt
+from modules.app.config import app, mongo, flask_bcrypt, jwt, init_config_details
 from modules.utils.allowed_filenames import allowed_file
 from modules.utils.init_classifier import classify_data
 from werkzeug.utils import secure_filename
-
-lib_path = os.path.abspath(os.path.join('python-flask'))
-sys.path.append(lib_path)
-ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-os.environ.update({'ROOT_PATH': ROOT_PATH})
-# Port variable to run the server on.
-PORT = os.environ.get('PORT')
-sys.path.remove(lib_path)
+from bson import json_util
 
 
 @app.errorhandler(404)
@@ -105,35 +98,31 @@ def unauthorized_response(callback):
     }), 401
 
 
-@app.route('/oldupload', methods=['POST'])
-def upload_file():
-    if request.method == 'POST':
-        # files = request.files.to_dict()
-        files = request.files.getlist('file')
-        for file in files:
-            if allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                df = pd.read_csv((os.path.join(app.config['UPLOAD_FOLDER'], filename)),
-                                 encoding='ISO-8859-1')  # loading csv file
-                records_ = df.to_dict(orient='records')
-                mongo.db.datasets.insert(records_)
-            else:
-                return jsonify({'ok': False}), 404
-        # category = request.form['category']
-        # properties = request.form['properties']
-        return jsonify({'ok': True}), 200
+@app.route('/get', methods=['GET'])
+def get_category():
+    category = (request.form.get('category'))
+    data = (json_util.dumps(category))
+    result = mongo.db.categories.find_one({'category_name': data})
+    return jsonify({'ok': True, 'categories': result})
+
+
+@app.route('/remove', methods=['POST'])
+def remove_category():
+    data = request.get_json()
+    category = data['category_name']
+    result = mongo.db.categories.delete_one(({'category_name': category}))
+    if result.deleted_count == 0:
+        return jsonify({'ok': False, 'message': 'Category not found'}), 401
     else:
-        return jsonify({'ok': False}), 404
+        return jsonify({'ok': True}), 200
 
 
 @app.route('/upload', methods=['POST'])
 def classify_file():
     if request.method == 'POST':
-        # files = request.files.to_dict()
         files = request.files.getlist('file')
-        category = jsonify(request.form.get('category'))
-        properties = jsonify(request.form.get('properties'))
+        category = (request.form.get('category'))
+        properties = (request.form.get('properties'))
         filenames = []
         for file in files:
             if allowed_file(file.filename):
@@ -141,11 +130,10 @@ def classify_file():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 file_path = (os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 filenames.append(file_path)
-                # df = pd.read_csv(file_path, encoding='ISO-8859-1')  # loading csv file
-                # records_ = df.to_dict(orient='records')
-                # mongo.db.datasets.insert(records_)
             else:
                 return jsonify({'ok': False}), 404
+        data = (json_util.dumps(category))
+        mongo.db.categories.insert_one(({'category_name': data}))
         classify_data(category, properties, filenames)
         return jsonify({'ok': True}), 200
     else:
@@ -153,6 +141,7 @@ def classify_file():
 
 
 if __name__ == '__main__':
+    init_config_details()
     # app.config['DEBUG'] = os.environ.get('ENV') == 'development'  # Debug mode if development env
     port = int(os.environ.get('PORT', 33507))
     host = os.environ.get('HOST', '0.0.0.0')

@@ -7,6 +7,7 @@ from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from bson.objectid import ObjectId
 from flask_cors import CORS
+import os, sys
 
 UPLOAD_FOLDER = 'uploads'
 
@@ -22,6 +23,16 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(o, datetime.datetime):
             return str(o)
         return json.JSONEncoder.default(self, o)
+
+
+def init_config_details():
+    lib_path = os.path.abspath(os.path.join('python-flask'))
+    sys.path.append(lib_path)
+    ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
+    os.environ.update({'ROOT_PATH': ROOT_PATH})
+    # Port variable to run the server on.
+    PORT = os.environ.get('PORT')
+    sys.path.remove(lib_path)
 
 
 def create_app():
