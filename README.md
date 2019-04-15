@@ -11,7 +11,7 @@ OSX
 ### `pip3 install pipenv`
 
 Change into the directory /python-flask/
-run the applicationusing: `gunicorn app:app`
+and run the application using: `gunicorn app:app`
 
 Open [http://0.0.0.0:8000/](http://0.0.0.0:8000/) to view it in the browser. 
 
