@@ -4,11 +4,14 @@
 Make sure you are in the root directory, WebAppBackEnd/  
 
 Run the following commands.  
-
+If you do not have pipenv installed:
 Linux/Windows
 ### `pip install pipenv`
 OSX
 ### `pip3 install pipenv`
+
+Then run:
+### `pipenv install`
 
 Change into the directory /python-flask/
 and run the application using: `gunicorn app:app`
