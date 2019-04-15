@@ -4,7 +4,7 @@
 Make sure you are in the root directory, WebAppBackEnd/  
 
 Run the following commands.  
-If you do not have pipenv installed:
+If you do not have pipenv installed:   
 Linux/Windows
 ### `pip install pipenv`
 OSX
