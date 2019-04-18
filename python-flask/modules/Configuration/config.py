@@ -1,4 +1,4 @@
-''' flask app with mongo '''
+''' flask Configuration with mongo '''
 import json
 import datetime
 from flask import Flask
@@ -41,7 +41,7 @@ def create_app():
     CORS(app)
     # add mongo url to flask config, so that flask_pymongo can use it to make connection
     app.config['MONGO_DBNAME'] = 'test'
-    # app.config['MONGO_URI'] = 'mongodb://%s:%s@ds161764.mlab.com:61764/dataplumers' % (os.environ.get('db_user'), os.environ.get('db_password'))
+    # Configuration.config['MONGO_URI'] = 'mongodb://%s:%s@ds161764.mlab.com:61764/dataplumers' % (os.environ.get('db_user'), os.environ.get('db_password'))
     app.config['MONGO_URI'] = 'mongodb://admin:c4pston3@ds161764.mlab.com:61764/dataplumers'
     app.config['JWT_SECRET_KEY'] = 'key.txt'
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=365)

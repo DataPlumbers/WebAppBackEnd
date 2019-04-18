@@ -1,12 +1,12 @@
-import os, sys, csv, json, logging
-import pandas as pd
+import os, logging
 import modules.schemas.user as validate
-from flask import jsonify, request, make_response, send_from_directory, redirect, url_for
+from flask import jsonify, request, make_response, send_from_directory
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity)
-from modules.app.config import app, mongo, flask_bcrypt, jwt, init_config_details
+from modules.Configuration.config import app, mongo, flask_bcrypt, jwt, init_config_details
 from modules.utils.allowed_filenames import allowed_file
 from modules.utils.init_classifier import classify_data
+from modules.utils.validate_csv import validate_csv_file
 from werkzeug.utils import secure_filename
 from bson import json_util
 
@@ -56,7 +56,7 @@ def register():
             mongo.db.users.insert_one(user)
             return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
     else:
-        return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
+        return jsonify({'ok': False, 'message': 'Error: password must be at least 5 characters'}), 401
 
 
 @app.route('/users/auth', methods=['POST'])
@@ -101,12 +101,17 @@ def unauthorized_response(callback):
 @app.route('/category/get', methods=['GET'])
 def get_category():
     if request.method == 'GET':
-        data = request.values.get('category_name')
-        result = mongo.db.categories.find_one({'category_name': data})
-        return jsonify({'ok': True, 'categories': ([
-        {'label': 'Review', 'value': ['author', 'comment', 'date']},
-        {'label': 'Employee', 'value': ['fullname', 'occupation', 'address', 'id']}
-     ])})
+            data = (request.values.get('category_name'))
+            result = mongo.db.categories.find_one({'Category': 'testing2'})
+            category = result.get('Category')
+            properties = result.get('Properties')[0].split(",")
+            #return jsonify({'ok': True, 'categories': ([
+            #    {'label': category, 'value': properties}])})
+            return jsonify({'ok': True, 'categories': ([
+                {'label': 'Review', 'value': ['author', 'comment', 'date']},
+                {'label': 'Employee', 'value': ['fullname', 'occupation', 'address', 'id']}
+            ])})
+
 
 
 @app.route('/category/remove', methods=['POST'])
@@ -126,6 +131,8 @@ def classify_file():
         files = request.files.getlist('file')
         category = (request.values.get('category'))
         properties = (request.values.get('properties'))
+        MongoObject = ({'Category': category, 'Properties': properties})
+        mongo.db.categories.insert_one(MongoObject)
         filenames = []
         for file in files:
             if allowed_file(file.filename):
@@ -133,10 +140,7 @@ def classify_file():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 file_path = (os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 filenames.append(file_path)
-            else:
-                return jsonify({'ok': False}), 404
-        data = (json_util.dumps(category))
-        mongo.db.categories.insert_one(({'category_name': data}))
+        # data = (json_util.dumps(category))
         classify_data(category, properties, filenames)
         return jsonify({'ok': True}), 200
     else:
@@ -145,8 +149,8 @@ def classify_file():
 
 if __name__ == '__main__':
     init_config_details()
-    # app.config['DEBUG'] = os.environ.get('ENV') == 'development'  # Debug mode if development env
-    port = int(os.environ.get('PORT', 33507))
+    app.config['DEBUG'] = True  # Debug mode if development env
+    port = int(os.environ.get('PORT', 8000))
     host = os.environ.get('HOST', '0.0.0.0')
     logging.basicConfig(filename='error.log', level=logging.DEBUG)
-    app.run(host=host, port=port)  # Run the app
+    app.run(host=host, port=port)  # Run the Configuration

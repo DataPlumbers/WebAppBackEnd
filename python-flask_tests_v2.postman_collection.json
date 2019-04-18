@@ -40,6 +40,40 @@
 			"response": []
 		},
 		{
+			"name": "Flask Mongo user JWT register test - bad password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"test1234@email.com\",\n\t\"name\": \"Bobby Burns1\",\n\t\"password\": \"pass\"\n}"
+				},
+				"url": {
+					"raw": "http://0.0.0.0:4000/users/signup",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Flask Mongo user JWT auth test",
 			"request": {
 				"method": "POST",
@@ -81,7 +115,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NDQwNTQzMzUsIm5iZiI6MTU0NDA1NDMzNSwianRpIjoiYzZhY2Q3ZDgtOWZlYi00NzRkLTkyMzktMGRlMDkyN2RkNjRkIiwiZXhwIjoxNTc1NTkwMzM1LCJpZGVudGl0eSI6eyJlbWFpbCI6InRlc3QxMjNAZW1haWwuY29tIiwicGFzc3dvcmQiOiJwYXNzd29yZCJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.kce1f6huJIm2hbItbab3WIj9pjwS3ySiy01KQZNYZTQ",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NDQxMTM3NTcsIm5iZiI6MTU0NDExMzc1NywianRpIjoiNzFlNzIxZGMtY2U2Zi00YzE4LTliZTgtOGVlYTdmNTE3ODU3IiwiZXhwIjoxNTc1NjQ5NzU3LCJpZGVudGl0eSI6eyJlbWFpbCI6InRlc3QxQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoicGFzc3dvcmQifSwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.5CBCP0VS3tIxgkAEtMOggF8MMg3peWgfN20LBpH_VQo",
 							"type": "string"
 						}
 					]
@@ -93,7 +127,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://0.0.0.0:4000/users?email=test123@email.com",
+					"raw": "http://0.0.0.0:4000/users?email=test1@email.com",
 					"protocol": "http",
 					"host": [
 						"0",
@@ -108,7 +142,7 @@
 					"query": [
 						{
 							"key": "email",
-							"value": "test123@email.com"
+							"value": "test1@email.com"
 						}
 					]
 				}

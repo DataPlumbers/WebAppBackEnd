@@ -1,4 +1,4 @@
-from modules.app.config import create_app
+from modules.Configuration.config import create_app
 import pytest
 
 

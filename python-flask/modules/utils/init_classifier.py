@@ -4,8 +4,8 @@ import json
 
 
 def classify_data(category, headers, filepaths):
-    headers_unwrap = headers.get_json().split(',')
-    category_unwrap = category.get_json()
+    headers_unwrap = headers.split(',')
+    category_unwrap = category
     ontology = merge(category, headers)
     print(ontology)
     classfier.classify(ontology, filepaths)
