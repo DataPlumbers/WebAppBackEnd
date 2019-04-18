@@ -13,7 +13,8 @@ OSX
 Then run:    
 ### `pipenv install`   
 Change into python-flask directory:
-run using: ### `gunicorn app:app`
+run using: 
+### `gunicorn app:app`
 
 
 using pipenv to install dependencies.<br>
