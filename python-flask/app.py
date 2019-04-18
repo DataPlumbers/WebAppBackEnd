@@ -101,15 +101,17 @@ def unauthorized_response(callback):
 @app.route('/category/get', methods=['GET'])
 def get_category():
     if request.method == 'GET':
+        try:
             data = (request.values.get('category_name'))
-            result = mongo.db.categories.find_one({'Category': 'testing2'})
+            result = mongo.db.categories.find_one({'Category': data})
             category = result.get('Category')
             properties = result.get('Properties')[0].split(",")
-            #return jsonify({'ok': True, 'categories': ([
-            #    {'label': category, 'value': properties}])})
             return jsonify({'ok': True, 'categories': ([
-                {'label': 'Review', 'value': ['author', 'comment', 'date']},
-                {'label': 'Employee', 'value': ['fullname', 'occupation', 'address', 'id']}
+                {'label': category, 'value': properties}])})
+        except:
+            return jsonify({'ok': True, 'categories': ([
+               {'label': 'Review', 'value': ['author', 'comment', 'date']},
+               {'label': 'Employee', 'value': ['fullname', 'occupation', 'address', 'id']}
             ])})
 
 
