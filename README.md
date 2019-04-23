@@ -1,16 +1,21 @@
 ## Python-Flask Backend: How To Run
-[![Build Status](https://travis-ci.com/kramsey458/WebAppBackEnd.svg?branch=vertical-prototype)](https://travis-ci.com/kramsey458/WebAppBackEnd)
+[![Build Status](https://travis-ci.com/kramsey458/WebAppBackEnd.svg?branch=master)](https://travis-ci.com/kramsey458/WebAppBackEnd)
 
 Make sure you are in the root directory, WebAppBackEnd/  
 
 Run the following commands.  
 
+If you do not have pipenv installed already:
 Linux/Windows
 ### `pip install pipenv`
 OSX
-### `pip3 install pipenv`
+### `pip3 install pipenv`   
+Then run:    
+### `pipenv install`   
+Change into python-flask directory:
+run using: 
+### `gunicorn app:app`
 
-run using: `gunicorn app:app`
 
 using pipenv to install dependencies.<br>
 Open [http://0.0.0.0:8000/](http://0.0.0.0:8000/) to view it in the browser. 
