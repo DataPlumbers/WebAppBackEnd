@@ -1,0 +1,4 @@
+Transaction_Date,Price,Product,Payment_Method,Customer_Account,New_Customer
+1/11/16,140.99,Product1,Cash,001146,No
+1/14/13,32.99,Product2,Credit,125309,Yes
+3/21/11,1499.31,Product9,Check,000321,No

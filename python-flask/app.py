@@ -143,8 +143,10 @@ def classify_file():
                 file_path = (os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 filenames.append(file_path)
         # data = (json_util.dumps(category))
-        classify_data(category, properties, filenames)
-        return jsonify({'ok': True}), 200
+        results_json = (classify_data(category, properties, filenames))
+        print(results_json)
+        return jsonify({'ok': True, 'results': results_json})
+        # return jsonify({'ok': True}), 200be
     else:
         return jsonify({'ok': False}), 404
 

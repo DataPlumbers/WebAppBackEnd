@@ -1,25 +1,31 @@
 # Driver for ML component of MarkLogic Classifier.
 import sys
 from modules.DataTraining import classifier as cfr
+# import classifier as cfr
+import os.path
 
-
-# Params: ontology = JSON object passed by frontend
-#         arg = list of CSV file paths
+# Params: ontology = stuff passed by frontend
+#         filepaths = list of filepaths to CSV files
 # Returns: The classification metadata
 # TODO: More clearly specify what metadata to return
-def classify(ontology, *arg):
+def classify(ontology, filepaths):
     # Verify parameters
-    if len(arg) == 0:
+    if len(filepaths) == 0 or len(ontology) != 2:
         print_usage()
-    my_classifier = cfr.Classifier(arg)
-    results = my_classifier.classify_ontology(ontology)
-    return results
+        raise ValueError("Bad arguments for Driver.classify")
+    for filepath in filepaths:
+        if not os.path.isfile(filepath):
+           raise FileNotFoundError(str(filepath) + " couldn't be found.")
+    my_classifier = cfr.Classifier(filepaths)
+    results_json = my_classifier.classify_ontology(ontology)
+    print(results_json)
+    return results_json
 
 
 # Print correct usage of application.
 def print_usage():
-    print("""driver.py requires two parameters:
+    print("""Classification module requires two parameters:
              1) The given ontology as a JSON object.
-             2) One or more CSV filepaths.""")
-    sys.exit(2)
-
+                Ex: ("myCategory", ["val1", "val2"])
+             2) One or more CSV filepaths.
+                Ex: ["file1.csv", "file2.csv"]""")
