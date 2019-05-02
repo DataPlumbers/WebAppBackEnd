@@ -18,7 +18,7 @@ def classify(ontology, filepaths):
            raise FileNotFoundError(str(filepath) + " couldn't be found.")
     my_classifier = cfr.Classifier(filepaths)
     results_json = my_classifier.classify_ontology(ontology)
-    print(results_json)
+    print("RESULTS: " + str(results_json))
     return results_json
 
 

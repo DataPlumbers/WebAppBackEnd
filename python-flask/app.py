@@ -145,8 +145,8 @@ def classify_file():
         # data = (json_util.dumps(category))
         results_json = (classify_data(category, properties, filenames))
         print(results_json)
-        return jsonify({'ok': True, 'results': results_json})
-        # return jsonify({'ok': True}), 200be
+        return jsonify({'ok': True, 'results': results_json}), 200
+        # return jsonify({'ok': True}), 200
     else:
         return jsonify({'ok': False}), 404
 

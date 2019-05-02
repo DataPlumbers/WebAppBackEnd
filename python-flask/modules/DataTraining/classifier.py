@@ -1,5 +1,6 @@
 from modules.DataTraining import headers as hdr
-import json 
+from flask import jsonify
+import json
 
 class Classifier:
     # Params: data_filepaths = paths to 1+ CSV files
@@ -27,4 +28,4 @@ class Classifier:
                 else:
                     results[prop][f].append(dict_res[prop])
         finalized = {category: results}
-        return json.dumps(finalized)
+        return finalized
