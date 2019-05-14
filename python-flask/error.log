@@ -3265,3 +3265,11 @@ DEBUG:jsonmerge:descend: schema #
 DEBUG:jsonmerge:descend: invoke strategy overwrite
 DEBUG:jsonmerge:work   : base #, head #
 INFO:werkzeug:127.0.0.1 - - [17/Apr/2019 19:48:39] "POST /upload HTTP/1.1" 200 -
+INFO:werkzeug: * Running on http://0.0.0.0:8000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 183-841-911
+INFO:werkzeug: * Running on http://0.0.0.0:8000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 183-841-911

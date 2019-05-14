@@ -47,6 +47,10 @@ pandas = "*"
 pytest-flask = "*"
 jellyfish = "*"
 jsonmerge = "*"
+modules = "*"
+spacy = "*"
+wordninja = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.7"
