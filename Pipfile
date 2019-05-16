@@ -7,7 +7,6 @@ verify_ssl = true
 
 [packages]
 bcrypt = "==3.1.4"
-bson = "==0.5.7"
 astroid = "==2.1.0"
 atomicwrites = "==1.2.1"
 attrs = "==18.2.0"
