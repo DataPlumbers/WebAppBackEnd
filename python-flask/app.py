@@ -120,7 +120,7 @@ def get_category():
 def remove_category():
     data = request.get_json()
     category = data['category_name']
-    result = mongo.db.categories.delete_one(({'category_name': category}))
+    result = mongo.db.categories.remove(({'Category': category}))
     if result.deleted_count == 0:
         return jsonify({'ok': False, 'message': 'Category not found'}), 401
     else:
