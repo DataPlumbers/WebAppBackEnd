@@ -118,9 +118,8 @@ def get_category():
 
 @app.route('/category/remove', methods=['POST'])
 def remove_category():
-    data = request.get_json()
-    category = data['category_name']
-    result = mongo.db.categories.remove(({'Category': category}))
+    category = request.values.get('category_name')
+    result = mongo.db.categories.delete_many(({'Category': category}))
     if result.deleted_count == 0:
         return jsonify({'ok': False, 'message': 'Category not found'}), 401
     else:
