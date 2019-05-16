@@ -1,6 +1,6 @@
 key.txt
 /python-flask/key.txt
-
+.idea
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
