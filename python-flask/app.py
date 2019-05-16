@@ -134,7 +134,8 @@ def classify_file():
         category = (request.values.get('category'))
         properties = (request.values.get('properties'))
         MongoObject = ({'Category': category, 'Properties': properties})
-        mongo.db.categories.insert_one(MongoObject)
+        if not mongo.db.categories.find_one(MongoObject):
+            mongo.db.categories.insert_one(MongoObject)
         filenames = []
         for file in files:
             if allowed_file(file.filename):
