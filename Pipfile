@@ -50,6 +50,7 @@ modules = "*"
 spacy = "*"
 wordninja = "*"
 numpy = "*"
+bson = "*"
 
 [requires]
 python_version = "3.7"
